@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('登录日志列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li class="select-time">
+                                <label>发生时间： </label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginHpTm]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endHpTm]"/>
+                            </li>
+                            <li>
+                                <p>登录名：</p>
+                                <input type="text" name="operId"/>
+                            </li>
+                            <li>
+                                <p>用户名：</p>
+                                <input type="text" name="username"/>
+                            </li>
+                            <li>
+                                <p>客户端IP：</p>
+                                <input type="text" name="userHostname"/>
+                            </li>
+                            <!-- <li>
+                                <p>登陆操作类型：</p>
+                                <input type="text" name="content"/>
+                            </li> -->
+                            <li>
+                                <p>登陆结果：</p>                          
+ 								<select name="result" th:with="type=${@dict.getType('tb_jou_login_result')}">
+  									<option value="">所有</option>
+  									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}">
+  								</option>
+							</select>
+ 							</li>
+                            <!-- <li>
+                                <p>操作描述：</p>
+                                <input type="text" name="descri"/>
+                            </li> -->
+                            <!-- <li>
+                                <p>失败原因：</p>
+                                <input type="text" name="error"/>
+                            </li> -->
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <!-- <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:login:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:login:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:login:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a> -->
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:login:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:login:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:login:remove')}]];
+        var prefix = ctx + "system/login";
+        var re = [[${@dict.getType('tb_jou_login_result')}]];
+        
+        <!--**************************************************-->
+         Date.prototype.format = function(fmt) { 
+            var o = { 
+               "M+" : this.getMonth()+1,                 //月份 
+               "d+" : this.getDate(),                    //日 
+               "h+" : this.getHours(),                   //小时 
+               "m+" : this.getMinutes(),                 //分 
+               "s+" : this.getSeconds(),                 //秒 
+               "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+               "S"  : this.getMilliseconds()             //毫秒 
+           }; 
+           if(/(y+)/.test(fmt)) {
+                   fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+           }
+            for(var k in o) {
+               if(new RegExp("("+ k +")").test(fmt)){
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+                }
+            }
+           return fmt; 
+       }
+        
+        layui.use('laydate', function() {
+        var laydate = layui.laydate;
+        var startDate = laydate.render({
+            elem: '#startTime',
+            max: '2099-12-31 23:59:59',
+            theme: 'molv',
+            trigger: 'click',
+            type: 'datetime',
+            done: function(value, date) {   
+                if (value !== '') {
+                    endDate.config.min.year = date.year;
+                    endDate.config.min.month = date.month - 1;
+                    endDate.config.min.date = date.date;
+                    endDate.config.min.hours = date.hours;
+                    endDate.config.min.minutes = date.minutes;
+                    endDate.config.min.seconds = date.seconds;
+                } else {
+                    endDate.config.min.year = '';
+                    endDate.config.min.month = '';
+                    endDate.config.min.date = '';
+                    endDate.config.min.hours = '';
+                    endDate.config.min.minutes = '';
+                    endDate.config.min.seconds = '';
+                }
+            }
+        });
+        var endDate = laydate.render({
+            elem: '#endTime',
+            min: $('#startTime').val(),
+            theme: 'molv',
+            trigger: 'click',
+            type: 'datetime',
+            done: function(value, date) {
+                if (value !== '') {
+                    startDate.config.max.year = date.year;
+                    startDate.config.max.month = date.month - 1;
+                    startDate.config.max.date = date.date;
+                    startDate.config.max.hours = date.hours;
+                    startDate.config.max.minutes = date.minutes;
+                    startDate.config.max.seconds = date.seconds;
+                } else {
+                    startDate.config.max.year = '';
+                    startDate.config.max.month = '';
+                    startDate.config.max.date = '';
+                    startDate.config.max.hours = '';
+                    startDate.config.max.minutes = '';
+                    startDate.config.max.seconds = '';
+                }
+            }
+        });
+    }); 
+        <!--**************************************************-->
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "登录日志",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : '自增长ID',
+                    visible: false
+                },
+                {
+                    field : 'hpTm', 
+                    title : '发生时间',
+                    sortable: true
+                },
+                {
+                    field : 'operId', 
+                    title : '登录名'
+                },
+                {
+                    field : 'username', 
+                    title : '用户名'
+                },
+                {
+                    field : 'userHostname', 
+                    title : '客户端IP'
+                },
+               /*  {
+                    field : 'content', 
+                    title : '登陆操作类型'
+                }, */
+                {
+                    field : 'result', 
+                    title : '登陆结果',
+                    formatter: function(value, row, index) {
+    		            return $.table.selectDictLabel(re, row.result);
+    		        }
+                },
+                /* {
+                    field : 'descri', 
+                    title : '操作描述'
+                }, */
+               /*  {
+                    field : 'error', 
+                    title : '失败原因'
+                }, */
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

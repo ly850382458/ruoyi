@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbDevinfoMapper">
+    
+    <resultMap type="TbDevinfo" id="TbDevinfoResult">
+        <result property="devId"    column="DEV_ID"    />
+        <result property="devName"    column="DEV_NAME"    />
+        <result property="platformId"    column="PLATFORM_ID"    />
+        <result property="domainId"    column="DOMAIN_ID"    />
+        <result property="modelId"    column="MODEL_ID"    />
+        <result property="categoryId"    column="CATEGORY_ID"    />
+        <result property="devConn"    column="DEV_CONN"    />
+        <result property="devVersion"    column="DEV_VERSION"    />
+        <result property="devUserpwd"    column="DEV_USERPWD"    />
+        <result property="devUsername"    column="DEV_USERNAME"    />
+        <result property="devCode"    column="DEV_CODE"    />
+        <result property="devExtParam"    column="DEV_EXT_PARAM"    />
+        <result property="isDeleted"    column="IS_DELETED"    />
+        <result property="gb28181codeId"    column="GB28181CODE_ID"    />
+        <result property="devNameAbbr"    column="DEV_NAME_ABBR"    />
+        <result property="versionValue"    column="VERSION_VALUE"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="devRemark"    column="DEV_REMARK"    />
+    </resultMap>
+
+    <sql id="selectTbDevinfoVo">
+        select DEV_ID, DEV_NAME, PLATFORM_ID, DOMAIN_ID, MODEL_ID, CATEGORY_ID,  SUBSTRING_INDEX(SUBSTRING_INDEX(DEV_CONN,"][Ip:",-1),"][Port:",1) as DEV_CONN, DEV_VERSION, DEV_USERPWD, DEV_USERNAME, DEV_CODE, DEV_EXT_PARAM, IS_DELETED, GB28181CODE_ID, DEV_NAME_ABBR, VERSION_VALUE, UPDATE_TIME, DEV_REMARK from tb_devinfo
+    </sql>
+    
+    <sql id="ip">
+    	 SUBSTRING_INDEX(SUBSTRING_INDEX(DEV_CONN,"][Ip:",-1),"][Port:",1)
+    </sql>
+
+    <select id="selectTbDevinfoList" parameterType="TbDevinfo" resultMap="TbDevinfoResult">
+        <include refid="selectTbDevinfoVo"/>
+        <where>  
+            <if test="devName != null  and devName != ''"> and DEV_NAME like concat('%', #{devName}, '%')</if>
+            <if test="platformId != null "> and PLATFORM_ID = #{platformId}</if>
+            <if test="domainId != null "> and DOMAIN_ID = #{domainId}</if>
+            <if test="modelId != null "> and MODEL_ID = #{modelId}</if>
+            <if test="categoryId != null "> and CATEGORY_ID = #{categoryId}</if>
+            <if test="devConn != null  and devConn != ''"> and DEV_CONN like concat('%', #{devConn}, '%')</if>
+            <!-- <if test="devVersion != null  and devVersion != ''"> and DEV_VERSION = #{devVersion}</if> -->
+            <if test="devUserpwd != null  and devUserpwd != ''"> and DEV_USERPWD like concat('%', #{devUserpwd}, '%')</if>
+            <if test="devUsername != null  and devUsername != ''"> and DEV_USERNAME like concat('%', #{devUsername}, '%')</if>
+            <if test="devCode != null  and devCode != ''"> and DEV_CODE = #{devCode}</if>
+            <if test="devExtParam != null  and devExtParam != ''"> and DEV_EXT_PARAM = #{devExtParam}</if>
+            <if test="isDeleted != null "> and IS_DELETED = #{isDeleted}</if>
+            <if test="gb28181codeId != null  and gb28181codeId != ''"> and GB28181CODE_ID = #{gb28181codeId}</if>
+            <if test="devNameAbbr != null  and devNameAbbr != ''"> and DEV_NAME_ABBR = #{devNameAbbr}</if>
+            <if test="versionValue != null "> and VERSION_VALUE = #{versionValue}</if>
+            <if test="updateTime != null "> and UPDATE_TIME = #{updateTime}</if>
+            <if test="devRemark != null  and devRemark != ''"> and DEV_REMARK = #{devRemark}</if>
+        </where>
+        order by DEV_CONN desc, GB28181CODE_ID desc
+    </select>
+    
+    <select id="selectTbDevinfoById" parameterType="Long" resultMap="TbDevinfoResult">
+        <include refid="selectTbDevinfoVo"/>
+        where DEV_ID = #{devId}
+    </select>
+        
+    <insert id="insertTbDevinfo" parameterType="TbDevinfo">
+        insert into tb_devinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="devId != null ">DEV_ID,</if>
+            <if test="devName != null  and devName != ''">DEV_NAME,</if>
+            <if test="platformId != null ">PLATFORM_ID,</if>
+            <if test="domainId != null ">DOMAIN_ID,</if>
+            <if test="modelId != null ">MODEL_ID,</if>
+            <if test="categoryId != null ">CATEGORY_ID,</if>
+            <if test="devConn != null  and devConn != ''">DEV_CONN,</if>
+            <if test="devVersion != null  and devVersion != ''">DEV_VERSION,</if>
+            <if test="devUserpwd != null  and devUserpwd != ''">DEV_USERPWD,</if>
+            <if test="devUsername != null  and devUsername != ''">DEV_USERNAME,</if>
+            <if test="devCode != null  and devCode != ''">DEV_CODE,</if>
+            <if test="devExtParam != null  and devExtParam != ''">DEV_EXT_PARAM,</if>
+            <if test="isDeleted != null ">IS_DELETED,</if>
+            <if test="gb28181codeId != null  and gb28181codeId != ''">GB28181CODE_ID,</if>
+            <if test="devNameAbbr != null  and devNameAbbr != ''">DEV_NAME_ABBR,</if>
+            <if test="versionValue != null ">VERSION_VALUE,</if>
+            <if test="updateTime != null ">UPDATE_TIME,</if>
+            <if test="devRemark != null  and devRemark != ''">DEV_REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="devId != null ">#{devId},</if>
+            <if test="devName != null  and devName != ''">#{devName},</if>
+            <if test="platformId != null ">#{platformId},</if>
+            <if test="domainId != null ">#{domainId},</if>
+            <if test="modelId != null ">#{modelId},</if>
+            <if test="categoryId != null ">#{categoryId},</if>
+            <if test="devConn != null  and devConn != ''">#{devConn},</if>
+            <if test="devVersion != null  and devVersion != ''">#{devVersion},</if>
+            <if test="devUserpwd != null  and devUserpwd != ''">#{devUserpwd},</if>
+            <if test="devUsername != null  and devUsername != ''">#{devUsername},</if>
+            <if test="devCode != null  and devCode != ''">#{devCode},</if>
+            <if test="devExtParam != null  and devExtParam != ''">#{devExtParam},</if>
+            <if test="isDeleted != null ">#{isDeleted},</if>
+            <if test="gb28181codeId != null  and gb28181codeId != ''">#{gb28181codeId},</if>
+            <if test="devNameAbbr != null  and devNameAbbr != ''">#{devNameAbbr},</if>
+            <if test="versionValue != null ">#{versionValue},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="devRemark != null  and devRemark != ''">#{devRemark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbDevinfo" parameterType="TbDevinfo">
+        update tb_devinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="devName != null  and devName != ''">DEV_NAME = #{devName},</if>
+            <if test="platformId != null ">PLATFORM_ID = #{platformId},</if>
+            <if test="domainId != null ">DOMAIN_ID = #{domainId},</if>
+            <if test="modelId != null ">MODEL_ID = #{modelId},</if>
+            <if test="categoryId != null ">CATEGORY_ID = #{categoryId},</if>
+            <if test="devConn != null  and devConn != ''">DEV_CONN = #{devConn},</if>
+            <if test="devVersion != null  and devVersion != ''">DEV_VERSION = #{devVersion},</if>
+            <if test="devUserpwd != null  and devUserpwd != ''">DEV_USERPWD = #{devUserpwd},</if>
+            <if test="devUsername != null  and devUsername != ''">DEV_USERNAME = #{devUsername},</if>
+            <if test="devCode != null  and devCode != ''">DEV_CODE = #{devCode},</if>
+            <if test="devExtParam != null  and devExtParam != ''">DEV_EXT_PARAM = #{devExtParam},</if>
+            <if test="isDeleted != null ">IS_DELETED = #{isDeleted},</if>
+            <if test="gb28181codeId != null  and gb28181codeId != ''">GB28181CODE_ID = #{gb28181codeId},</if>
+            <if test="devNameAbbr != null  and devNameAbbr != ''">DEV_NAME_ABBR = #{devNameAbbr},</if>
+            <if test="versionValue != null ">VERSION_VALUE = #{versionValue},</if>
+            <if test="updateTime != null ">UPDATE_TIME = #{updateTime},</if>
+            <if test="devRemark != null  and devRemark != ''">DEV_REMARK = #{devRemark},</if>
+        </trim>
+        where DEV_ID = #{devId}
+    </update>
+
+    <delete id="deleteTbDevinfoById" parameterType="Long">
+        delete from tb_devinfo where DEV_ID = #{devId}
+    </delete>
+
+    <delete id="deleteTbDevinfoByIds" parameterType="String">
+        delete from tb_devinfo where DEV_ID in 
+        <foreach item="devId" collection="array" open="(" separator="," close=")">
+            #{devId}
+        </foreach>
+    </delete>
+    
+</mapper>

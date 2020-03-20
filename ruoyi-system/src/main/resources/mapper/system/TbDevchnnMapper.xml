@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbDevchnnMapper">
+    
+    <resultMap type="TbDevchnn" id="TbDevchnnResult">
+        <result property="id"    column="ID"    />
+        <result property="platformId"    column="PLATFORM_ID"    />
+        <result property="devId"    column="DEV_ID"    />
+        <result property="chnId"    column="CHN_ID"    />
+        <result property="chntypeId"    column="CHNTYPE_ID"    />
+        <result property="chnCode"    column="CHN_CODE"    />
+        <result property="chnName"    column="CHN_NAME"    />
+        <result property="gb28181codeId"    column="GB28181CODE_ID"    />
+        <result property="chnExtParam"    column="CHN_EXT_PARAM"    />
+        <result property="isDeleted"    column="IS_DELETED"    />
+        <result property="domainId"    column="DOMAIN_ID"    />
+        <result property="matrixId"    column="MATRIX_ID"    />
+        <result property="defaultStream"    column="DEFAULT_STREAM"    />
+        <result property="facade"    column="FACADE"    />
+        <result property="controlType"    column="CONTROL_TYPE"    />
+        <result property="gpsX"    column="GPS_X"    />
+        <result property="gpsY"    column="GPS_Y"    />
+        <result property="chnAbility"    column="CHN_ABILITY"    />
+        <result property="chnNameAbbr"    column="CHN_NAME_ABBR"    />
+        <result property="chnNameSpell"    column="CHN_NAME_SPELL"    />
+        <result property="versionValue"    column="VERSION_VALUE"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="chnIpaddr"    column="CHN_IPADDR"    />
+        <result property="orderid"    column="ORDERID"    />
+        <result property="isShow"    column="IS_SHOW"    />
+        <result property="chnRemark"    column="CHN_REMARK"    />
+        <result property="storageType"    column="STORAGE_TYPE"    />
+        <result property="usageType"    column="USAGE_TYPE"    />
+        <result property="viewshed"    column="VIEWSHED"    />
+        <result property="whdw"    column="WHDW"    />
+        <result property="devConn"    column="DEV_CONN"    />
+        <result property="devUserpwd"    column="DEV_USERPWD"    />
+        <result property="onlineStatusW"    column="ONLINE_STATUS_W"    />
+        <result property="authid"    column="AUTHID"    />
+        
+    </resultMap>
+
+    <sql id="selectTbDevchnnVo">
+        select   a.CHN_NAME,a.DEV_USERPWD,a.DEV_CONN, a.GB28181CODE_ID,a.WHDW from tb_sbxx a
+    </sql>
+
+    <select id="selectTbDevchnnList" parameterType="TbDevchnn" resultMap="TbDevchnnResult">
+    
+     	<include refid="selectTbDevchnnVo"/>  
+     	where 1=1 
+     			and a.DEV_ID in(select dev_id from tb_devstatus  
+        		where 1=1
+        		<if test="onlineStatusW != null and onlineStatusW != '' "  > and ONLINE_STATUS_W = #{onlineStatusW}</if>)   
+        		<if test="whdw != null  and whdw != ''"> and WHDW = #{whdw}</if> 
+ 	</select>
+       
+    
+    
+    <select id="selectTbDevchnnById" parameterType="Long" resultMap="TbDevchnnResult">
+        <include refid="selectTbDevchnnVo"/>
+        where ID = #{id}
+    </select>
+        
+    <insert id="insertTbDevchnn" parameterType="TbDevchnn" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_devchnn
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platformId != null ">PLATFORM_ID,</if>
+            <if test="devId != null ">DEV_ID,</if>
+            <if test="chnId != null ">CHN_ID,</if>
+            <if test="chntypeId != null ">CHNTYPE_ID,</if>
+            <if test="chnCode != null  and chnCode != ''">CHN_CODE,</if>
+            <if test="chnName != null  and chnName != ''">CHN_NAME,</if>
+            <if test="gb28181codeId != null  and gb28181codeId != ''">GB28181CODE_ID,</if>
+            <if test="chnExtParam != null  and chnExtParam != ''">CHN_EXT_PARAM,</if>
+            <if test="isDeleted != null ">IS_DELETED,</if>
+            <if test="domainId != null ">DOMAIN_ID,</if>
+            <if test="matrixId != null ">MATRIX_ID,</if>
+            <if test="defaultStream != null ">DEFAULT_STREAM,</if>
+            <if test="facade != null ">FACADE,</if>
+            <if test="controlType != null ">CONTROL_TYPE,</if>
+            <if test="gpsX != null  and gpsX != ''">GPS_X,</if>
+            <if test="gpsY != null  and gpsY != ''">GPS_Y,</if>
+            <if test="chnAbility != null  and chnAbility != ''">CHN_ABILITY,</if>
+            <if test="chnNameAbbr != null  and chnNameAbbr != ''">CHN_NAME_ABBR,</if>
+            <if test="chnNameSpell != null  and chnNameSpell != ''">CHN_NAME_SPELL,</if>
+            <if test="versionValue != null ">VERSION_VALUE,</if>
+            <if test="updateTime != null ">UPDATE_TIME,</if>
+            <if test="chnIpaddr != null  and chnIpaddr != ''">CHN_IPADDR,</if>
+            <if test="orderid != null ">ORDERID,</if>
+            <if test="isShow != null ">IS_SHOW,</if>
+            <if test="chnRemark != null  and chnRemark != ''">CHN_REMARK,</if>
+            <if test="storageType != null ">STORAGE_TYPE,</if>
+            <if test="usageType != null ">USAGE_TYPE,</if>
+            <if test="viewshed != null  and viewshed != ''">VIEWSHED,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platformId != null ">#{platformId},</if>
+            <if test="devId != null ">#{devId},</if>
+            <if test="chnId != null ">#{chnId},</if>
+            <if test="chntypeId != null ">#{chntypeId},</if>
+            <if test="chnCode != null  and chnCode != ''">#{chnCode},</if>
+            <if test="chnName != null  and chnName != ''">#{chnName},</if>
+            <if test="gb28181codeId != null  and gb28181codeId != ''">#{gb28181codeId},</if>
+            <if test="chnExtParam != null  and chnExtParam != ''">#{chnExtParam},</if>
+            <if test="isDeleted != null ">#{isDeleted},</if>
+            <if test="domainId != null ">#{domainId},</if>
+            <if test="matrixId != null ">#{matrixId},</if>
+            <if test="defaultStream != null ">#{defaultStream},</if>
+            <if test="facade != null ">#{facade},</if>
+            <if test="controlType != null ">#{controlType},</if>
+            <if test="gpsX != null  and gpsX != ''">#{gpsX},</if>
+            <if test="gpsY != null  and gpsY != ''">#{gpsY},</if>
+            <if test="chnAbility != null  and chnAbility != ''">#{chnAbility},</if>
+            <if test="chnNameAbbr != null  and chnNameAbbr != ''">#{chnNameAbbr},</if>
+            <if test="chnNameSpell != null  and chnNameSpell != ''">#{chnNameSpell},</if>
+            <if test="versionValue != null ">#{versionValue},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="chnIpaddr != null  and chnIpaddr != ''">#{chnIpaddr},</if>
+            <if test="orderid != null ">#{orderid},</if>
+            <if test="isShow != null ">#{isShow},</if>
+            <if test="chnRemark != null  and chnRemark != ''">#{chnRemark},</if>
+            <if test="storageType != null ">#{storageType},</if>
+            <if test="usageType != null ">#{usageType},</if>
+            <if test="viewshed != null  and viewshed != ''">#{viewshed},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbDevchnn" parameterType="TbDevchnn">
+        update tb_devchnn
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platformId != null ">PLATFORM_ID = #{platformId},</if>
+            <if test="devId != null ">DEV_ID = #{devId},</if>
+            <if test="chnId != null ">CHN_ID = #{chnId},</if>
+            <if test="chntypeId != null ">CHNTYPE_ID = #{chntypeId},</if>
+            <if test="chnCode != null  and chnCode != ''">CHN_CODE = #{chnCode},</if>
+            <if test="chnName != null  and chnName != ''">CHN_NAME = #{chnName},</if>
+            <if test="gb28181codeId != null  and gb28181codeId != ''">GB28181CODE_ID = #{gb28181codeId},</if>
+            <if test="chnExtParam != null  and chnExtParam != ''">CHN_EXT_PARAM = #{chnExtParam},</if>
+            <if test="isDeleted != null ">IS_DELETED = #{isDeleted},</if>
+            <if test="domainId != null ">DOMAIN_ID = #{domainId},</if>
+            <if test="matrixId != null ">MATRIX_ID = #{matrixId},</if>
+            <if test="defaultStream != null ">DEFAULT_STREAM = #{defaultStream},</if>
+            <if test="facade != null ">FACADE = #{facade},</if>
+            <if test="controlType != null ">CONTROL_TYPE = #{controlType},</if>
+            <if test="gpsX != null  and gpsX != ''">GPS_X = #{gpsX},</if>
+            <if test="gpsY != null  and gpsY != ''">GPS_Y = #{gpsY},</if>
+            <if test="chnAbility != null  and chnAbility != ''">CHN_ABILITY = #{chnAbility},</if>
+            <if test="chnNameAbbr != null  and chnNameAbbr != ''">CHN_NAME_ABBR = #{chnNameAbbr},</if>
+            <if test="chnNameSpell != null  and chnNameSpell != ''">CHN_NAME_SPELL = #{chnNameSpell},</if>
+            <if test="versionValue != null ">VERSION_VALUE = #{versionValue},</if>
+            <if test="updateTime != null ">UPDATE_TIME = #{updateTime},</if>
+            <if test="chnIpaddr != null  and chnIpaddr != ''">CHN_IPADDR = #{chnIpaddr},</if>
+            <if test="orderid != null ">ORDERID = #{orderid},</if>
+            <if test="isShow != null ">IS_SHOW = #{isShow},</if>
+            <if test="chnRemark != null  and chnRemark != ''">CHN_REMARK = #{chnRemark},</if>
+            <if test="storageType != null ">STORAGE_TYPE = #{storageType},</if>
+            <if test="usageType != null ">USAGE_TYPE = #{usageType},</if>
+            <if test="viewshed != null  and viewshed != ''">VIEWSHED = #{viewshed},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteTbDevchnnById" parameterType="Long">
+        delete from tb_devchnn where ID = #{id}
+    </delete>
+
+    <delete id="deleteTbDevchnnByIds" parameterType="String">
+        delete from tb_devchnn where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

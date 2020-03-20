@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbPollingMapper">
+    
+    <resultMap type="TbPolling" id="TbPollingResult">
+        <result property="id"    column="ID"    />
+        <result property="name"    column="NAME"    />
+        <result property="accountId"    column="ACCOUNT_ID"    />
+        <result property="timeInterval"    column="TIME_INTERVAL"    />
+        <result property="windowsplit"    column="WINDOWSPLIT"    />
+        <result property="windowexclude"    column="WINDOWEXCLUDE"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="shareStatus"    column="SHARE_STATUS"    />
+    </resultMap>
+
+    <sql id="selectTbPollingVo">
+        select ID, NAME, ACCOUNT_ID, TIME_INTERVAL, WINDOWSPLIT, WINDOWEXCLUDE, REMARK, SHARE_STATUS from tb_polling
+    </sql>
+
+    <select id="selectTbPollingList" parameterType="TbPolling" resultMap="TbPollingResult">
+        <include refid="selectTbPollingVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and NAME like concat('%', #{name}, '%')</if>
+            <if test="accountId != null "> and ACCOUNT_ID = #{accountId}</if>
+            <if test="timeInterval != null "> and TIME_INTERVAL = #{timeInterval}</if>
+            <if test="windowsplit != null "> and WINDOWSPLIT = #{windowsplit}</if>
+            <if test="windowexclude != null  and windowexclude != ''"> and WINDOWEXCLUDE = #{windowexclude}</if>
+            <if test="remark != null  and remark != ''"> and REMARK = #{remark}</if>
+            <if test="shareStatus != null "> and SHARE_STATUS = #{shareStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectTbPollingAll" parameterType="TbPolling" resultMap="TbPollingResult">
+    	select  ID,NAME, ACCOUNT_ID from tb_polling
+   	</select>
+     
+    
+    <select id="selectTbPollingById" parameterType="Long" resultMap="TbPollingResult">
+        <include refid="selectTbPollingVo"/>
+        where ID = #{id}
+    </select>
+        
+    <insert id="insertTbPolling" parameterType="TbPolling" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_polling
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">NAME,</if>
+            <if test="accountId != null ">ACCOUNT_ID,</if>
+            <if test="timeInterval != null ">TIME_INTERVAL,</if>
+            <if test="windowsplit != null ">WINDOWSPLIT,</if>
+            <if test="windowexclude != null  and windowexclude != ''">WINDOWEXCLUDE,</if>
+            <if test="remark != null  and remark != ''">REMARK,</if>
+            <if test="shareStatus != null ">SHARE_STATUS,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="accountId != null ">#{accountId},</if>
+            <if test="timeInterval != null ">#{timeInterval},</if>
+            <if test="windowsplit != null ">#{windowsplit},</if>
+            <if test="windowexclude != null  and windowexclude != ''">#{windowexclude},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="shareStatus != null ">#{shareStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbPolling" parameterType="TbPolling">
+        update tb_polling
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">NAME = #{name},</if>
+            <if test="accountId != null ">ACCOUNT_ID = #{accountId},</if>
+            <if test="timeInterval != null ">TIME_INTERVAL = #{timeInterval},</if>
+            <if test="windowsplit != null ">WINDOWSPLIT = #{windowsplit},</if>
+            <if test="windowexclude != null  and windowexclude != ''">WINDOWEXCLUDE = #{windowexclude},</if>
+            <if test="remark != null  and remark != ''">REMARK = #{remark},</if>
+            <if test="shareStatus != null ">SHARE_STATUS = #{shareStatus},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteTbPollingById" parameterType="Long">
+        delete from tb_polling where ID = #{id}
+    </delete>
+
+    <delete id="deleteTbPollingByIds" parameterType="String">
+        delete from tb_polling where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbJouLoginMapper">
+    
+    <resultMap type="TbJouLogin" id="TbJouLoginResult">
+        <result property="id"    column="ID"    />
+        <result property="hpTm"    column="HP_TM"    />
+        <result property="operId"    column="OPER_ID"    />
+        <result property="userHostname"    column="USER_HOSTNAME"    />
+        <result property="content"    column="CONTENT"    />
+        <result property="result"    column="RESULT"    />
+        <result property="descri"    column="DESCRI"    />
+        <result property="error"    column="ERROR"    />
+		<result property="accountname"    column="ACCOUNTNAME"    />
+		<result property="username"    column="USERNAME"    />	
+		</resultMap>
+   
+
+    <sql id="selectTbJouLoginVo">
+        select a.ID, a.HP_TM, a.OPER_ID,b.USERNAME, a.USER_HOSTNAME, a.CONTENT, a.RESULT, a.DESCRI, a.ERROR 
+        from tb_jou_login a,tb_v2_user b
+    </sql>
+
+    <select id="selectTbJouLoginList" parameterType="TbJouLogin" resultMap="TbJouLoginResult">
+        <include refid="selectTbJouLoginVo"/> 
+        <where>  
+        	a.OPER_ID=b.ACCOUNTNAME
+            <!-- <if test="hpTm != null "> and HP_TM = #{hpTm}</if> -->
+            
+            <if test="params.beginHpTm != null and params.beginHpTm != ''"><!-- 开始时间检索 -->
+			and date_format(HP_TM,'%Y-%c-%d %H:%i:%S') &gt;= date_format(#{params.beginHpTm},'%Y-%c-%d %H:%i:%S')
+			</if>
+			<if test="params.endHpTm != null and params.endHpTm != ''"><!-- 结束时间检索 -->
+			and date_format(HP_TM,'%Y-%c-%d %H:%i:%S') &lt;= date_format(#{params.endHpTm},'%Y-%c-%d %H:%i:%S')
+			</if>
+			
+            <if test="operId != null  and operId != ''"> and OPER_ID like concat('%', #{operId}, '%')</if>
+            <if test="userHostname != null  and userHostname != ''"> and USER_HOSTNAME like concat('%', #{userHostname}, '%')</if>
+            <if test="username != null  and username != ''"> and USERNAME like  concat('%',#{username},'%')</if>
+            <if test="content != null  and content != ''"> and CONTENT = #{content}</if>
+            <if test="result != null "> and RESULT = #{result}</if>
+            <if test="descri != null  and descri != ''"> and DESCRI = #{descri}</if>
+            <if test="error != null  and error != ''"> and ERROR = #{error}</if>
+        </where>
+        order by HP_TM ASC
+    </select>
+    
+    <select id="selectTbJouLoginById" parameterType="Long" resultMap="TbJouLoginResult">
+        <include refid="selectTbJouLoginVo"/>
+        where ID = #{id}
+    </select>
+        
+    <insert id="insertTbJouLogin" parameterType="TbJouLogin" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_jou_login
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hpTm != null ">HP_TM,</if>
+            <if test="operId != null  and operId != ''">OPER_ID,</if>
+            <if test="userHostname != null  and userHostname != ''">USER_HOSTNAME,</if>
+            <if test="content != null  and content != ''">CONTENT,</if>
+            <if test="result != null ">RESULT,</if>
+            <if test="descri != null  and descri != ''">DESCRI,</if>
+            <if test="error != null  and error != ''">ERROR,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hpTm != null ">#{hpTm},</if>
+            <if test="operId != null  and operId != ''">#{operId},</if>
+            <if test="userHostname != null  and userHostname != ''">#{userHostname},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="result != null ">#{result},</if>
+            <if test="descri != null  and descri != ''">#{descri},</if>
+            <if test="error != null  and error != ''">#{error},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbJouLogin" parameterType="TbJouLogin">
+        update tb_jou_login
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hpTm != null ">HP_TM = #{hpTm},</if>
+            <if test="operId != null  and operId != ''">OPER_ID = #{operId},</if>
+            <if test="userHostname != null  and userHostname != ''">USER_HOSTNAME = #{userHostname},</if>
+            <if test="content != null  and content != ''">CONTENT = #{content},</if>
+            <if test="result != null ">RESULT = #{result},</if>
+            <if test="descri != null  and descri != ''">DESCRI = #{descri},</if>
+            <if test="error != null  and error != ''">ERROR = #{error},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteTbJouLoginById" parameterType="Long">
+        delete from tb_jou_login where ID = #{id}
+    </delete>
+
+    <delete id="deleteTbJouLoginByIds" parameterType="String">
+        delete from tb_jou_login where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbV2UserMapper">
+    
+    <resultMap type="TbV2User" id="TbV2UserResult">
+        <result property="accountid"    column="ACCOUNTID"    />
+        <result property="accountname"    column="ACCOUNTNAME"    />
+        <result property="password"    column="PASSWORD"    />
+        <result property="username"    column="USERNAME"    />
+        <result property="usercode"    column="USERCODE"    />
+        <result property="gender"    column="GENDER"    />
+        <result property="idcard"    column="IDCARD"    />
+        <result property="organizeid"    column="ORGANIZEID"    />
+        <result property="policeid"    column="POLICEID"    />
+        <result property="contact"    column="CONTACT"    />
+        <result property="remark"    column="REMARK"    />
+        <result property="digitallogin"    column="DIGITALLOGIN"    />
+        <result property="priority"    column="PRIORITY"    />
+        <result property="enable"    column="ENABLE"    />
+        <result property="repeatlogin"    column="REPEATLOGIN"    />
+        <result property="isDeleted"    column="IS_DELETED"    />
+        <result property="loginStatus"    column="LOGIN_STATUS"    />
+        <result property="createuser"    column="CREATEUSER"    />
+        <result property="createtime"    column="CREATETIME"    />
+    </resultMap>
+
+    <sql id="selectTbV2UserVo">
+        select ACCOUNTID, ACCOUNTNAME, PASSWORD, USERNAME, USERCODE, GENDER, IDCARD, ORGANIZEID, POLICEID, CONTACT, REMARK, DIGITALLOGIN, PRIORITY, ENABLE, REPEATLOGIN, IS_DELETED, LOGIN_STATUS, CREATEUSER, CREATETIME from tb_v2_user
+    </sql>
+
+    <select id="selectTbV2UserList" parameterType="TbV2User" resultMap="TbV2UserResult">
+        <include refid="selectTbV2UserVo"/>
+        <where>  
+            <if test="accountname != null  and accountname != ''"> and ACCOUNTNAME like concat('%', #{accountname}, '%')</if>
+            <if test="password != null  and password != ''"> and PASSWORD = #{password}</if>
+            <if test="username != null  and username != ''"> and USERNAME like concat('%', #{username}, '%')</if>
+            <if test="usercode != null  and usercode != ''"> and USERCODE = #{usercode}</if>
+            <if test="gender != null "> and GENDER = #{gender}</if>
+            <if test="idcard != null  and idcard != ''"> and IDCARD = #{idcard}</if>
+            <if test="organizeid != null "> and ORGANIZEID = #{organizeid}</if>
+            <if test="policeid != null  and policeid != ''"> and POLICEID = #{policeid}</if>
+            <if test="contact != null  and contact != ''"> and CONTACT = #{contact}</if>
+            <if test="remark != null  and remark != ''"> and REMARK = #{remark}</if>
+            <if test="digitallogin != null "> and DIGITALLOGIN = #{digitallogin}</if>
+            <if test="priority != null "> and PRIORITY = #{priority}</if>
+            <if test="enable != null "> and ENABLE = #{enable}</if>
+            <if test="repeatlogin != null "> and REPEATLOGIN = #{repeatlogin}</if>
+            <if test="isDeleted != null "> and IS_DELETED = #{isDeleted}</if>
+            <if test="loginStatus != null "> and LOGIN_STATUS = #{loginStatus}</if>
+            <if test="createuser != null  and createuser != ''"> and CREATEUSER = #{createuser}</if>
+            <if test="createtime != null "> and CREATETIME = #{createtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTbV2UserById" parameterType="Long" resultMap="TbV2UserResult">
+        <include refid="selectTbV2UserVo"/>
+        where ACCOUNTID = #{accountid}
+    </select>
+        
+    <insert id="insertTbV2User" parameterType="TbV2User">
+        insert into tb_v2_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountid != null ">ACCOUNTID,</if>
+            <if test="accountname != null  and accountname != ''">ACCOUNTNAME,</if>
+            <if test="password != null  and password != ''">PASSWORD,</if>
+            <if test="username != null  and username != ''">USERNAME,</if>
+            <if test="usercode != null  and usercode != ''">USERCODE,</if>
+            <if test="gender != null ">GENDER,</if>
+            <if test="idcard != null  and idcard != ''">IDCARD,</if>
+            <if test="organizeid != null ">ORGANIZEID,</if>
+            <if test="policeid != null  and policeid != ''">POLICEID,</if>
+            <if test="contact != null  and contact != ''">CONTACT,</if>
+            <if test="remark != null  and remark != ''">REMARK,</if>
+            <if test="digitallogin != null ">DIGITALLOGIN,</if>
+            <if test="priority != null ">PRIORITY,</if>
+            <if test="enable != null ">ENABLE,</if>
+            <if test="repeatlogin != null ">REPEATLOGIN,</if>
+            <if test="isDeleted != null ">IS_DELETED,</if>
+            <if test="loginStatus != null ">LOGIN_STATUS,</if>
+            <if test="createuser != null  and createuser != ''">CREATEUSER,</if>
+            <if test="createtime != null ">CREATETIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountid != null ">#{accountid},</if>
+            <if test="accountname != null  and accountname != ''">#{accountname},</if>
+            <if test="password != null  and password != ''">#{password},</if>
+            <if test="username != null  and username != ''">#{username},</if>
+            <if test="usercode != null  and usercode != ''">#{usercode},</if>
+            <if test="gender != null ">#{gender},</if>
+            <if test="idcard != null  and idcard != ''">#{idcard},</if>
+            <if test="organizeid != null ">#{organizeid},</if>
+            <if test="policeid != null  and policeid != ''">#{policeid},</if>
+            <if test="contact != null  and contact != ''">#{contact},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="digitallogin != null ">#{digitallogin},</if>
+            <if test="priority != null ">#{priority},</if>
+            <if test="enable != null ">#{enable},</if>
+            <if test="repeatlogin != null ">#{repeatlogin},</if>
+            <if test="isDeleted != null ">#{isDeleted},</if>
+            <if test="loginStatus != null ">#{loginStatus},</if>
+            <if test="createuser != null  and createuser != ''">#{createuser},</if>
+            <if test="createtime != null ">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbV2User" parameterType="TbV2User">
+        update tb_v2_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountname != null  and accountname != ''">ACCOUNTNAME = #{accountname},</if>
+            <if test="password != null  and password != ''">PASSWORD = #{password},</if>
+            <if test="username != null  and username != ''">USERNAME = #{username},</if>
+            <if test="usercode != null  and usercode != ''">USERCODE = #{usercode},</if>
+            <if test="gender != null ">GENDER = #{gender},</if>
+            <if test="idcard != null  and idcard != ''">IDCARD = #{idcard},</if>
+            <if test="organizeid != null ">ORGANIZEID = #{organizeid},</if>
+            <if test="policeid != null  and policeid != ''">POLICEID = #{policeid},</if>
+            <if test="contact != null  and contact != ''">CONTACT = #{contact},</if>
+            <if test="remark != null  and remark != ''">REMARK = #{remark},</if>
+            <if test="digitallogin != null ">DIGITALLOGIN = #{digitallogin},</if>
+            <if test="priority != null ">PRIORITY = #{priority},</if>
+            <if test="enable != null ">ENABLE = #{enable},</if>
+            <if test="repeatlogin != null ">REPEATLOGIN = #{repeatlogin},</if>
+            <if test="isDeleted != null ">IS_DELETED = #{isDeleted},</if>
+            <if test="loginStatus != null ">LOGIN_STATUS = #{loginStatus},</if>
+            <if test="createuser != null  and createuser != ''">CREATEUSER = #{createuser},</if>
+            <if test="createtime != null ">CREATETIME = #{createtime},</if>
+        </trim>
+        where ACCOUNTID = #{accountid}
+    </update>
+
+    <delete id="deleteTbV2UserById" parameterType="Long">
+        delete from tb_v2_user where ACCOUNTID = #{accountid}
+    </delete>
+
+    <delete id="deleteTbV2UserByIds" parameterType="String">
+        delete from tb_v2_user where ACCOUNTID in 
+        <foreach item="accountid" collection="array" open="(" separator="," close=")">
+            #{accountid}
+        </foreach>
+    </delete>
+    
+</mapper>
