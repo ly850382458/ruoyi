@@ -20,7 +20,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 轮巡Controller
+ * 视频轮巡Controller
  * 
  * @author ruoyi
  * @date 2019-12-09
